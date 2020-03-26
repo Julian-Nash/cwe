@@ -12,5 +12,5 @@ with open("software_development.json", "r") as fp:
 # attrs
 for k, v in data.items():
     for key in v.keys():
-        print(f"- {key}")
+        print(f"- `{key}`")
     break
