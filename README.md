@@ -1,0 +1,1 @@
+# cwe - Common weakness enumeration wrapper for Python
