@@ -51,7 +51,7 @@ Weakness(cwe_id=15, name=External Control of System or Configuration Setting)
 
 #### Weakness attributes
 
-The following attributes can be found against a weakness object:
+The following weakness object attributes can accessed:
 
 - cwe_id
 - name
