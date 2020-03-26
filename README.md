@@ -1,12 +1,14 @@
-# `Common weakness enumeration library for Python`
+## Common weakness enumeration library for Python
 
-### `Installation`
+https://cwe.mitre.org/index.html
+
+#### `Installation`
 
 ```sh
 pip install cwe
 ```
 
-### `Usage`
+#### `Usage`
 
 - Get a CWE by ID:
 
@@ -47,6 +49,34 @@ Weakness(cwe_id=15, name=External Control of System or Configuration Setting)
 >>> db.get(15)
 ```
 
-### Tests
+#### `Weakness attributes`
 
-There's a small `unittest` test suite in the `/tests` directory
+The following attributes can be found against a weakness object:
+
+- cwe_id
+- name
+- weakness_abstraction
+- status
+- description
+- extended_description
+- related_weaknesses
+- weakness_ordinalities
+- applicable_platforms
+- background_details
+- alternate_terms
+- modes_of_introduction
+- exploitation_factors
+- likelihood_of_exploit
+- common_consequences
+- detection_methods
+- potential_mitigations
+- observed_examples
+- functional_areas
+- affected_resources
+- taxonomy_mappings
+- related_attack_patterns
+- notes
+
+#### `Tests`
+
+There's a small `unittest` test suite in the `tests` directory

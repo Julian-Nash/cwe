@@ -12,10 +12,5 @@ with open("software_development.json", "r") as fp:
 # attrs
 for k, v in data.items():
     for key in v.keys():
-        t = f"""
-@property
-def {key}(self):
-    return self._{key}
-        """
-        print(t)
+        print(f"- {key}")
     break
