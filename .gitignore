@@ -126,5 +126,3 @@ dmypy.json
 .DS_Store
 .idea
 .vscode
-
-cwe/resources/util.py
