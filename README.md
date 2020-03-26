@@ -2,13 +2,13 @@
 
 https://cwe.mitre.org/index.html
 
-#### `Installation`
+#### Installation
 
 ```sh
 pip install cwe
 ```
 
-#### `Usage`
+#### Usage
 
 - Get a CWE by ID:
 
@@ -49,7 +49,7 @@ Weakness(cwe_id=15, name=External Control of System or Configuration Setting)
 >>> db.get(15)
 ```
 
-#### `Weakness attributes`
+#### Weakness attributes
 
 The following attributes can be found against a weakness object:
 
@@ -77,6 +77,6 @@ The following attributes can be found against a weakness object:
 - related_attack_patterns
 - notes
 
-#### `Tests`
+#### Tests
 
 There's a small `unittest` test suite in the `tests` directory
