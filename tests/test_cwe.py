@@ -28,6 +28,35 @@ class TestDatabase(unittest.TestCase):
         top_25 = self.db.get_top_25()
         self.assertEqual(len(top_25), 25)
 
+    def test_weakness_prop_name(self):
+
+        cwe = self.db.get(15)
+        self.assertEqual(
+            cwe.name, "External Control of System or Configuration Setting"
+        )
+
+    def test_weakness_repr(self):
+
+        cwe = self.db.get(15)
+        self.assertEqual(str(cwe), "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)")
+
+    def test_weakness_get_prop(self):
+
+        cwe = self.db.get(15)
+        self.assertEqual(cwe.get("name"), "External Control of System or Configuration Setting")
+
+    def test_weakness_get_prop_that_doesnt_exist(self):
+
+        cwe = self.db.get(15)
+
+        self.assertEqual(cwe.get("Foo"), None)
+
+    def test_weakness_get_prop_that_doesnt_exist_with_default_supplied(self):
+
+        cwe = self.db.get(15)
+
+        self.assertEqual(cwe.get("Foo", False), False)
+
     def test_weakness_to_dict_returns_dict_type(self):
 
         cwe = self.db.get(15)
