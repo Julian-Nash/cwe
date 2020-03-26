@@ -3,7 +3,7 @@ from cwe import Database, CWECategory
 import unittest
 
 
-class TestReader(unittest.TestCase):
+class TestDatabase(unittest.TestCase):
 
     def setUp(self):
         self.db = Database()
@@ -11,7 +11,6 @@ class TestReader(unittest.TestCase):
     def tearDown(self):
         ...
 
-    @unittest.skip
     def test_cwe_get_id(self):
 
         cwe = self.db.get(15)
@@ -19,13 +18,21 @@ class TestReader(unittest.TestCase):
             cwe.name, "External Control of System or Configuration Setting"
         )
 
-    @unittest.skip
+    def test_database_count(self):
+
+        count = self.db.count()
+        self.assertEqual(count, 839)
+
+    def test_get_top_25(self):
+
+        top_25 = self.db.get_top_25()
+        self.assertEqual(len(top_25), 25)
+
     def test_weakness_to_dict_returns_dict_type(self):
 
         cwe = self.db.get(15)
         self.assertIs(type(cwe.to_dict()), dict)
 
-    @unittest.skip
     def test_weakness_to_dict_returns_dict_key(self):
 
         cwe = self.db.get(15)
@@ -34,7 +41,18 @@ class TestReader(unittest.TestCase):
             "External Control of System or Configuration Setting"
         )
 
-    def test_cwe_get_category(self):
+    def test_cwe_get_category_with_bad_category(self):
+        """ Should return an empty dict """
+
+        cwe = self.db.get_category("foo")
+        self.assertEqual(cwe, {})
+
+    def test_cwe_get_software_development_category(self):
 
         cwe = self.db.get_category(CWECategory.SOFTWARE_DEVELOPMENT.value)
-        print(cwe)
+        self.assertEqual(type(cwe), dict)
+
+    def test_cwe_get_hardware_design_category(self):
+
+        cwe = self.db.get_category(CWECategory.HARDWARE_DESIGN.value)
+        self.assertEqual(type(cwe), dict)
