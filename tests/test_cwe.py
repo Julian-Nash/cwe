@@ -38,12 +38,18 @@ class TestDatabase(unittest.TestCase):
     def test_weakness_repr(self):
 
         cwe = self.db.get(15)
-        self.assertEqual(str(cwe), "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)")
+        self.assertEqual(
+            str(cwe),
+            "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)"
+        )
 
     def test_weakness_get_prop(self):
 
         cwe = self.db.get(15)
-        self.assertEqual(cwe.get("name"), "External Control of System or Configuration Setting")
+        self.assertEqual(
+            cwe.get("name"),
+            "External Control of System or Configuration Setting"
+        )
 
     def test_weakness_get_prop_that_doesnt_exist(self):
 
