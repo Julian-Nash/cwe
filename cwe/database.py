@@ -42,16 +42,14 @@ class Database(object):
 
         return data
 
-    def get_top_25(self):
+    def get_top_25(self) -> dict:
+        """ Get a dict of the top 25 weaknesses
+
+        Returns:
+            dict
+        """
 
         data = self._load_db()
-
-        # r = {}
-        #
-        # for k, v in data.items():
-        #     if str(k) in TOP_25:
-        #         r[k] = v
-
         return {k: v for k, v in data.items() if str(k) in TOP_25}
 
     def get(self,
