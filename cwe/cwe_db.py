@@ -1,21 +1,24 @@
 from cwe.weakness import Weakness
 
-import json
 from typing import Union, Any, Optional
+import json
 import os
-
-_file: str = os.path.dirname(os.path.realpath(__file__))
-_resources: str = os.path.join(_file, "resources")
 
 
 class Database(object):
+
+    def __init__(self):
+        self._file: str = os.path.dirname(os.path.realpath(__file__))
+        self._resources: str = os.path.join(self._file, "resources")
 
     def _load_db(self, file: Optional[str] = None) -> dict:
 
         file = file or "cwe.json"
 
-        with open(os.path.join(_resources, file), "rb") as fp:
-            return json.load(fp)
+        with open(os.path.join(self._resources, file), "rb") as fp:
+            data = json.load(fp)
+
+        return data
 
     def get(self,
             cwe_id: Union[int, str],
