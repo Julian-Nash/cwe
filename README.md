@@ -1,5 +1,7 @@
 ## Common weakness enumeration library for Python
 
+![Python package](https://github.com/Julian-Nash/cwe/workflows/Python%20package/badge.svg)
+
 https://cwe.mitre.org/index.html
 
 #### Installation
