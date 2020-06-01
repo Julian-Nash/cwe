@@ -48,7 +48,8 @@ Weakness(cwe_id=15, name=External Control of System or Configuration Setting)
 ```pycon
 >>> from cwe import Database
 >>> db = Database()
->>> db.get(15)
+>>> db.get_top_25()
+
 ```
 
 #### Weakness attributes
