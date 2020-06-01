@@ -54,95 +54,95 @@ class Weakness(object):
         self._related_attack_patterns = related_attack_patterns
         self._notes = notes
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Weakness(cwe_id={self.cwe_id}, name={self.name})"
 
     @property
-    def cwe_id(self):
+    def cwe_id(self) -> str:
         return self._cwe_id
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def weakness_abstraction(self):
+    def weakness_abstraction(self) -> Union[str, None]:
         return self._weakness_abstraction
 
     @property
-    def status(self):
+    def status(self) -> Union[str, None]:
         return self._status
 
     @property
-    def description(self):
+    def description(self) -> Union[str, None]:
         return self._description
 
     @property
-    def extended_description(self):
+    def extended_description(self) -> Union[str, None]:
         return self._extended_description
 
     @property
-    def related_weaknesses(self):
+    def related_weaknesses(self) -> Union[str, None]:
         return self._related_weaknesses
 
     @property
-    def weakness_ordinalities(self):
+    def weakness_ordinalities(self) -> Union[str, None]:
         return self._weakness_ordinalities
 
     @property
-    def applicable_platforms(self):
+    def applicable_platforms(self) -> Union[str, None]:
         return self._applicable_platforms
 
     @property
-    def background_details(self):
+    def background_details(self) -> Union[str, None]:
         return self._background_details
 
     @property
-    def alternate_terms(self):
+    def alternate_terms(self) -> Union[str, None]:
         return self._alternate_terms
 
     @property
-    def modes_of_introduction(self):
+    def modes_of_introduction(self) -> Union[str, None]:
         return self._modes_of_introduction
 
     @property
-    def exploitation_factors(self):
+    def exploitation_factors(self) -> Union[str, None]:
         return self._exploitation_factors
 
     @property
-    def likelihood_of_exploit(self):
+    def likelihood_of_exploit(self) -> Union[str, None]:
         return self._likelihood_of_exploit
 
     @property
-    def common_consequences(self):
+    def common_consequences(self) -> Union[str, None]:
         return self._common_consequences
 
     @property
-    def detection_methods(self):
+    def detection_methods(self) -> Union[str, None]:
         return self._detection_methods
 
     @property
-    def potential_mitigations(self):
+    def potential_mitigations(self) -> Union[str, None]:
         return self._potential_mitigations
 
     @property
-    def observed_examples(self):
+    def observed_examples(self) -> Union[str, None]:
         return self._observed_examples
 
     @property
-    def functional_areas(self):
+    def functional_areas(self) -> Union[str, None]:
         return self._functional_areas
 
     @property
-    def affected_resources(self):
+    def affected_resources(self) -> Union[str, None]:
         return self._affected_resources
 
     @property
-    def taxonomy_mappings(self):
+    def taxonomy_mappings(self) -> Union[str, None]:
         return self._taxonomy_mappings
 
     @property
-    def related_attack_patterns(self):
+    def related_attack_patterns(self) -> Union[str, None]:
         return self._related_attack_patterns
 
     @property
