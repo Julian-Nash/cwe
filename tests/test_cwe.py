@@ -4,12 +4,8 @@ import unittest
 
 
 class TestDatabase(unittest.TestCase):
-
     def setUp(self):
         self.db = Database()
-
-    def tearDown(self):
-        ...
 
     def test_cwe_get_id(self):
 
@@ -40,15 +36,14 @@ class TestDatabase(unittest.TestCase):
         cwe = self.db.get(15)
         self.assertEqual(
             str(cwe),
-            "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)"
+            "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)",
         )
 
     def test_weakness_get_prop(self):
 
         cwe = self.db.get(15)
         self.assertEqual(
-            cwe.get("name"),
-            "External Control of System or Configuration Setting"
+            cwe.get("name"), "External Control of System or Configuration Setting"
         )
 
     def test_weakness_get_prop_that_doesnt_exist(self):
@@ -72,8 +67,7 @@ class TestDatabase(unittest.TestCase):
 
         cwe = self.db.get(15)
         self.assertEqual(
-            cwe.to_dict()["name"],
-            "External Control of System or Configuration Setting"
+            cwe.to_dict()["name"], "External Control of System or Configuration Setting"
         )
 
     def test_cwe_get_category_with_bad_category(self):

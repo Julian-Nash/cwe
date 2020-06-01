@@ -1,18 +1,40 @@
 from cwe.weakness import Weakness
 
 from typing import Union, Any, Optional
+from functools import lru_cache
 import json
 import os
 
 TOP_25: tuple = (
-    "119", "79", "20", "200", "125", "89", "416", "190", "352", "22", "78",
-    "787", "287", "476", "732", "434", "611", "94", "798", "400", "772", "426",
-    "502", "269", "295"
+    "119",
+    "79",
+    "20",
+    "200",
+    "125",
+    "89",
+    "416",
+    "190",
+    "352",
+    "22",
+    "78",
+    "787",
+    "287",
+    "476",
+    "732",
+    "434",
+    "611",
+    "94",
+    "798",
+    "400",
+    "772",
+    "426",
+    "502",
+    "269",
+    "295",
 )
 
 
 class Database(object):
-
     def __init__(self):
         self._file: str = os.path.dirname(os.path.realpath(__file__))
         self._resources: str = os.path.join(self._file, "resources")
@@ -27,8 +49,9 @@ class Database(object):
             self._load_db()
             return self._count
 
+    @lru_cache()
     def _load_db(self, file: Optional[str] = None) -> dict:
-        """ Loads the database temporarily
+        """ Loads the database
 
         Args:
             file: The file to load (cwe.json)
@@ -52,9 +75,9 @@ class Database(object):
         data = self._load_db()
         return {k: v for k, v in data.items() if str(k) in TOP_25}
 
-    def get(self,
-            cwe_id: Union[int, str],
-            default: Optional[Any] = None) -> Union[Weakness, Any]:
+    def get(
+        self, cwe_id: Union[int, str], default: Optional[Any] = None
+    ) -> Union[Weakness, Any]:
         """ Get a common weakness object
 
         Args:
@@ -83,7 +106,7 @@ class Database(object):
         category_map: dict = {
             "hardware_design": "hardware_design.json",
             "research_concepts": "research_concepts.json",
-            "software_development": "software_development.json"
+            "software_development": "software_development.json",
         }
 
         if category not in category_map:

@@ -3,14 +3,10 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open("requirements.txt", "r") as fh:
-    dependencies = fh.read()
-
 setuptools.setup(
     name="cwe",
     version="0.1",
     packages=setuptools.find_packages(),
-    install_requires=dependencies,
     author="Julian Nash",
     author_email="julianjamesnash@gmail.com",
     description="Common weakness enumeration wrapper for Python",
