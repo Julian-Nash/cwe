@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="cwe",
-    version="1.1",
+    version="1.2",
     packages=setuptools.find_packages(),
     author="Julian Nash",
     author_email="julianjamesnash@gmail.com",

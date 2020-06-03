@@ -85,3 +85,8 @@ class TestDatabase(unittest.TestCase):
 
         cwe = self.db.get_category(CWECategory.HARDWARE_DESIGN.value)
         self.assertEqual(type(cwe), dict)
+
+    def test_get_all(self):
+
+        data = self.db.get_all()
+

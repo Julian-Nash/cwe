@@ -1,6 +1,6 @@
 from cwe.weakness import Weakness
 
-from typing import Union, Any, Optional
+from typing import Union, Any, Optional, List
 from functools import lru_cache
 import json
 import os
@@ -113,3 +113,37 @@ class Database(object):
             return {}
 
         return self._load_db(file=category_map[category])
+
+    def get_all(self) -> List[Weakness]:
+
+        data = self._load_db()
+
+        return [Weakness(
+            cwe_id=d.get("cwe_id"),
+            name=d.get("name"),
+            weakness_abstraction=d.get("weakness_abstraction"),
+            status=d.get("status"),
+            description=d.get("description"),
+            extended_description=d.get("extended_description"),
+            related_weaknesses=d.get("related_weaknesses"),
+            weakness_ordinalities=d.get("weakness_ordinalities"),
+            applicable_platforms=d.get("applicable_platforms"),
+            background_details=d.get("background_details"),
+            alternate_terms=d.get("alternate_terms"),
+            modes_of_introduction=d.get("modes_of_introduction"),
+            exploitation_factors=d.get("exploitation_factors"),
+            likelihood_of_exploit=d.get("likelihood_of_exploit"),
+            common_consequences=d.get("common_consequences"),
+            detection_methods=d.get("detection_methods"),
+            potential_mitigations=d.get("potential_mitigations"),
+            observed_examples=d.get("observed_examples"),
+            functional_areas=d.get("functional_areas"),
+            affected_resources=d.get("affected_resources"),
+            taxonomy_mappings=d.get("taxonomy_mappings"),
+            related_attack_patterns=d.get("related_attack_patterns"),
+            notes=d.get("notes")
+            ) for d in data.values()
+        ]
+
+
+
