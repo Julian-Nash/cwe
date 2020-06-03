@@ -8,6 +8,7 @@ setuptools.setup(
     version="1.4",
     packages=setuptools.find_packages(),
     author="Julian Nash",
+    include_package_data=True,
     author_email="julianjamesnash@gmail.com",
     description="Common weakness enumeration wrapper for Python",
     long_description=long_description,

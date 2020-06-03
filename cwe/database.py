@@ -33,11 +33,12 @@ TOP_25: tuple = (
     "295",
 )
 
+this_file: str = os.path.abspath(os.path.dirname(__file__))
+
 
 class Database(object):
     def __init__(self):
         self._file: str = os.path.dirname(os.path.realpath(__file__))
-        self._resources: str = os.path.join(self._file, "resources")
         self._count: int = 0
 
     def count(self) -> int:
@@ -59,7 +60,7 @@ class Database(object):
 
         file = file or "cwe.json"
 
-        with open(os.path.join(self._resources, file), "rb") as fp:
+        with open(os.path.join(this_file, file), "rb") as fp:
             data = json.load(fp)
             self._count = len(data)
 
