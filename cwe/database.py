@@ -99,7 +99,7 @@ class Database(object):
                         #  Insert the cwe into it's respective category
                         db_dict[cwe_id] = row
 
-        pickle_data: bytes = pickle.dumps(db_dict, protocol=4)
+        pickle_data: bytes = pickle.dumps(db_dict, protocol=pickle.DEFAULT_PROTOCOL)
 
         with open("category_index.json", "w") as fp:
             logger.debug("Writing data to category_index.json")
