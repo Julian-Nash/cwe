@@ -1,4 +1,6 @@
-from cwe import Database, CWECategory
+from typing import List
+
+from cwe import Database, CWECategory, Weakness
 
 import unittest
 
@@ -10,13 +12,14 @@ class TestDatabase(unittest.TestCase):
     def test_cwe_get_id(self):
 
         cwe = self.db.get(15)
+
         self.assertEqual(
             cwe.name, "External Control of System or Configuration Setting"
         )
 
     def test_database_count(self):
 
-        count = self.db.count()
+        count = self.db.count
         self.assertEqual(count, 839)
 
     def test_get_top_25(self):
@@ -71,22 +74,20 @@ class TestDatabase(unittest.TestCase):
         )
 
     def test_cwe_get_category_with_bad_category(self):
-        """ Should return an empty dict """
 
-        cwe = self.db.get_category("foo")
-        self.assertEqual(cwe, {})
+        with self.assertRaises(KeyError):
+            self.db.get_category("foo")
 
     def test_cwe_get_software_development_category(self):
 
-        cwe = self.db.get_category(CWECategory.SOFTWARE_DEVELOPMENT.value)
-        self.assertEqual(type(cwe), dict)
+        cwe: List[Weakness] = self.db.get_category(CWECategory.SOFTWARE_DEVELOPMENT.value)
+        self.assertEqual(type(cwe), list)
 
     def test_cwe_get_hardware_design_category(self):
 
-        cwe = self.db.get_category(CWECategory.HARDWARE_DESIGN.value)
-        self.assertEqual(type(cwe), dict)
+        cwe: List[Weakness] = self.db.get_category(CWECategory.HARDWARE_DESIGN.value)
+        self.assertEqual(type(cwe), list)
 
     def test_get_all(self):
 
         data = self.db.get_all()
-

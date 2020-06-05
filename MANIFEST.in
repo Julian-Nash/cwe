@@ -1,3 +1,2 @@
 include *.txt
-exclude *.csv
-global-include *.json
+global-include *.pickle.gz *.json
