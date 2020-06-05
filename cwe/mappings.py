@@ -1,5 +1,5 @@
 cwe_src_mapping: dict = {
-    "sortware_development": {
+    "software_development": {
         "csv_uri": "https://cwe.mitre.org/data/csv/699.csv.zip",
         "pickle_file": "",
         "csv_hash": "",
