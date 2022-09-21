@@ -1,93 +1,80 @@
-from typing import List
+from unittest import TestCase
 
-from cwe import Database, CWECategory, Weakness
+from cwe.categories import CWECategory
+from cwe.database import Database
+from cwe.weakness import Weakness
 
-import unittest
 
-
-class TestDatabase(unittest.TestCase):
+class TestDatabase(TestCase):
     def setUp(self):
         self.db = Database()
 
-    def test_cwe_get_id(self):
+    def test_get_cwe_by_category(self):
+        cwe = self.db.get(441, CWECategory.HARDWARE_DESIGN)
+        self.assertEqual(cwe.cwe_id, 441)
+        self.assertEqual(cwe.name, "Unintended Proxy or Intermediary ('Confused Deputy')")
 
+    def test_cwe_get(self):
         cwe = self.db.get(15)
+        self.assertEqual(cwe.cwe_id, 15)
+        self.assertEqual(cwe.name, "External Control of System or Configuration Setting")
+        self.assertEqual(cwe.weakness_abstraction, "Base")
+        self.assertEqual(cwe.status, "Incomplete")
+        self.assertEqual(cwe.description, "One or more system settings or configuration elements can be externally "
+                                          "controlled by a user.")
+        self.assertEqual(cwe.extended_description, "Allowing external control of system settings can disrupt service "
+                                                   "or cause an application to behave in unexpected, and potentially "
+                                                   "malicious ways.")
 
-        self.assertEqual(
-            cwe.name, "External Control of System or Configuration Setting"
-        )
+        self.assertEqual(cwe.related_weaknesses, "::NATURE:ChildOf:CWE ID:642:VIEW "
+                                                 "ID:1000:ORDINAL:Primary::NATURE:ChildOf:CWE ID:610:VIEW "
+                                                 "ID:1000::NATURE:ChildOf:CWE ID:20:VIEW ID:700:ORDINAL:Primary::")
+        self.assertEqual(cwe.related_attack_patterns, "::13::146::176::203::270::271::69::76::77::")
 
-    def test_database_count(self):
+        self.assertEqual(cwe.potential_mitigations, "::PHASE:Architecture and Design:STRATEGY:Separation of "
+                                                    "Privilege:DESCRIPTION:Compartmentalize the system to have safe "
+                                                    "areas where trust boundaries can be unambiguously drawn. Do not "
+                                                    "allow sensitive data to go outside of the trust boundary and "
+                                                    "always be careful when interfacing with a compartment outside of "
+                                                    "the safe area. Ensure that appropriate compartmentalization is "
+                                                    "built into the system design, and the compartmentalization "
+                                                    "allows for and reinforces privilege separation functionality. "
+                                                    "Architects and designers should rely on the principle of least "
+                                                    "privilege to decide the appropriate time to use privileges and "
+                                                    "the time to drop privileges.::PHASE:Implementation Architecture "
+                                                    "and Design:DESCRIPTION:Because setting manipulation covers a "
+                                                    "diverse set of functions, any attempt at illustrating it will "
+                                                    "inevitably be incomplete. Rather than searching for a tight-knit "
+                                                    "relationship between the functions addressed in the setting "
+                                                    "manipulation category, take a step back and consider the sorts "
+                                                    "of system values that an attacker should not be allowed to "
+                                                    "control.::PHASE:Implementation Architecture and "
+                                                    "Design:DESCRIPTION:In general, do not allow user-provided or "
+                                                    "otherwise untrusted data to control sensitive values. The "
+                                                    "leverage that an attacker gains by controlling these values is "
+                                                    "not always immediately obvious, but do not underestimate the "
+                                                    "creativity of the attacker.::")
+        self.assertEqual(cwe.taxonomy_mappings, "::TAXONOMY NAME:7 Pernicious Kingdoms:ENTRY NAME:Setting "
+                                                "Manipulation::TAXONOMY NAME:Software Fault Patterns:ENTRY "
+                                                "ID:SFP25:ENTRY NAME:Tainted input to variable::")
 
-        count = self.db.count
-        self.assertEqual(count, 839)
+    def test_is_top_25_cwe(self):
+        self.assertTrue(self.db.is_cwe_top_25(20))
+        self.assertTrue(self.db.is_cwe_top_25("20"))
+        self.assertFalse(self.db.is_cwe_top_25(0))
+        self.assertFalse(self.db.is_cwe_top_25("0"))
 
-    def test_get_top_25(self):
+    def test_is_owasp_top_ten_2021(self):
+        self.assertTrue(self.db.is_owasp_top_ten_2021(11))
+        self.assertTrue(self.db.is_owasp_top_ten_2021("11"))
+        self.assertFalse(self.db.is_owasp_top_ten_2021(0))
+        self.assertFalse(self.db.is_cwe_top_25("0"))
 
-        top_25 = self.db.get_top_25()
-        self.assertEqual(len(top_25), 25)
+    def test_get_top_25_cwe(self):
+        self.assertEqual(len(self.db.get_top_25_cwe()), 25)
+        self.assertTrue(isinstance(self.db.get_top_25_cwe()[0], Weakness))
 
-    def test_weakness_prop_name(self):
+    def test_get_owasp_top_ten_2021(self):
+        self.assertEqual(len(self.db.get_owasp_top_ten_2021()), 182)
+        self.assertTrue(isinstance(self.db.get_owasp_top_ten_2021()[0], Weakness))
 
-        cwe = self.db.get(15)
-        self.assertEqual(
-            cwe.name, "External Control of System or Configuration Setting"
-        )
-
-    def test_weakness_repr(self):
-
-        cwe = self.db.get(15)
-        self.assertEqual(
-            str(cwe),
-            "Weakness(cwe_id=15, name=External Control of System or Configuration Setting)",
-        )
-
-    def test_weakness_get_prop(self):
-
-        cwe = self.db.get(15)
-        self.assertEqual(
-            cwe.get("name"), "External Control of System or Configuration Setting"
-        )
-
-    def test_weakness_get_prop_that_doesnt_exist(self):
-
-        cwe = self.db.get(15)
-
-        self.assertEqual(cwe.get("Foo"), None)
-
-    def test_weakness_get_prop_that_doesnt_exist_with_default_supplied(self):
-
-        cwe = self.db.get(15)
-
-        self.assertEqual(cwe.get("Foo", False), False)
-
-    def test_weakness_to_dict_returns_dict_type(self):
-
-        cwe = self.db.get(15)
-        self.assertIs(type(cwe.to_dict()), dict)
-
-    def test_weakness_to_dict_returns_dict_key(self):
-
-        cwe = self.db.get(15)
-        self.assertEqual(
-            cwe.to_dict()["name"], "External Control of System or Configuration Setting"
-        )
-
-    def test_cwe_get_category_with_bad_category(self):
-
-        with self.assertRaises(KeyError):
-            self.db.get_category("foo")
-
-    def test_cwe_get_software_development_category(self):
-
-        cwe: List[Weakness] = self.db.get_category(CWECategory.SOFTWARE_DEVELOPMENT.value)
-        self.assertEqual(type(cwe), list)
-
-    def test_cwe_get_hardware_design_category(self):
-
-        cwe: List[Weakness] = self.db.get_category(CWECategory.HARDWARE_DESIGN.value)
-        self.assertEqual(type(cwe), list)
-
-    def test_get_all(self):
-
-        data = self.db.get_all()

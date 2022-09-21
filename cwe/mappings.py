@@ -1,45 +1,31 @@
 cwe_src_mapping: dict = {
     "software_development": {
         "csv_uri": "https://cwe.mitre.org/data/csv/699.csv.zip",
-        "pickle_file": "",
+        "csv_file": "database/699.csv",
         "csv_hash": "",
     },
     "hardware_design": {
         "csv_uri": "https://cwe.mitre.org/data/csv/1194.csv.zip",
-        "pickle_file": "",
+        "csv_file": "database/1194.csv",
         "csv_hash": "",
     },
     "research_concepts": {
         "csv_uri": "https://cwe.mitre.org/data/csv/1000.csv.zip",
-        "pickle_file": "",
+        "csv_file": "database/1000.csv",
         "csv_hash": "",
     },
 }
 
-top_25: tuple = (
-    "119",
-    "79",
-    "20",
-    "200",
-    "125",
-    "89",
-    "416",
-    "190",
-    "352",
-    "22",
-    "78",
-    "787",
-    "287",
-    "476",
-    "732",
-    "434",
-    "611",
-    "94",
-    "798",
-    "400",
-    "772",
-    "426",
-    "502",
-    "269",
-    "295",
-)
+external_mappings: dict = {
+    "CWE_top_25_2022": {
+        "csv_uri": "https://cwe.mitre.org/data/csv/1387.csv.zip",
+        "csv_file": "database/1387.csv",
+        "csv_hash": "",
+    },
+
+    "OWASP_top_ten_2021": {
+        "csv_uri": "https://cwe.mitre.org/data/csv/1344.csv.zip",
+        "csv_file": "database/1344.csv",
+        "csv_hash": "",
+    }
+}

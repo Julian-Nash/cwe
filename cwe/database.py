@@ -1,187 +1,89 @@
-import gzip
-import pickle
+from typing import List, Union
+
+from cwe.categories import CWECategory
+from cwe.mappings import cwe_src_mapping, external_mappings
+import os
+import pandas as pd
 
 from cwe.weakness import Weakness
-from cwe.mappings import top_25, cwe_src_mapping
-
-import requests
-from requests import Response
-
-from typing import Union, Any, Optional, List
-import tempfile
-import logging
-import zipfile
-import json
-import csv
-import os
-import io
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger()
-base_path: str = os.path.abspath(os.path.dirname(__file__))
 
 
-class Database(object):
-    def __init__(self):
-        self._count: int = 0
+class Database:
+    _instance = None
 
-    @property
-    def count(self) -> int:
-        if not self._count:
-            self._load_database()
-        return self._count
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    software_development_db = pd.read_csv(
+        os.path.join(base_path, cwe_src_mapping["software_development"]["csv_file"]), index_col=False)
+    hardware_design_db = pd.read_csv(
+        os.path.join(base_path, cwe_src_mapping["hardware_design"]["csv_file"]), index_col=False)
+    research_concepts_db = pd.read_csv(
+        os.path.join(base_path, cwe_src_mapping["research_concepts"]["csv_file"]), index_col=False)
+    cwe_top_25_2022_db = pd.read_csv(
+        os.path.join(base_path, external_mappings["CWE_top_25_2022"]["csv_file"]), index_col=False)
+    owasp_top_ten_2021_db = pd.read_csv(
+        os.path.join(base_path, external_mappings["OWASP_top_ten_2021"]["csv_file"]), index_col=False)
 
-    def _load_database(self) -> dict:
-        """ Loads the gzipped pickle file """
-        with gzip.open(os.path.join(base_path, "db.pickle.gz"), "rb") as f:
-            data: dict = pickle.loads(f.read())
-            # Update the self._count attr
-            self._count = len(data)
-            return data
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Database, cls).__new__(cls)
+        return cls._instance
 
-    def _make_get_request(self, url: str) -> Response:
-        logging.debug(f"Requesting data from url {url}")
-        return requests.get(url)
-
-    def _write_gzip(self, data: Union[str, bytes], filename: str) -> str:
-        """ Writes data to a gzip file """
-
-        if not filename.endswith(".gz"):
-            filename = filename + ".gz"
-
-        if not isinstance(data, bytes):
-            data: bytes = data.encode("utf-8")
-
-        logger.debug(f"Writing gzip {filename}")
-
-        with gzip.open(filename, "wb") as f:
-            f.write(data)
-
-        return filename
-
-    def _load_category_index(self) -> dict:
-        """ Loads the category index """
-        with open(os.path.join(base_path, "category_index.json"), "r") as fp:
-            return json.load(fp)
-
-    def _build_database(self):
-        """ Builds the local database """
-
-        db_dict: dict = {}
-        category_index = self._load_category_index()
-
-        for category, v in cwe_src_mapping.items():
-
-            # Download the csv.zip
-            data: Response = self._make_get_request(v["csv_uri"])
-
-            # Unzip the csv into memory
-            z = zipfile.ZipFile(io.BytesIO(data.content))
-
-            # Get the filename
-            filename = v["csv_uri"].split("/")[-1].split(".zip")[0]
-
-            #  Save the csv to a tempfile
-            with tempfile.TemporaryDirectory() as tmp:
-                logger.debug(f"Extracting csv to {os.path.join(tmp, filename)}")
-                z.extractall(path=tmp)
-
-                # Open and read the csv
-                with open(os.path.join(tmp, filename)) as csv_file:
-                    logger.debug(f"Reading csv {filename}")
-                    reader = csv.DictReader(csv_file)
-                    for row in reader:
-                        cwe_id: str = row["CWE-ID"]
-                        # Update the category index
-                        if cwe_id not in category_index[category]:
-                            category_index[category].append()
-                        #  Insert the cwe into it's respective category
-                        db_dict[cwe_id] = row
-
-        pickle_data: bytes = pickle.dumps(db_dict)
-
-        with open("category_index.json", "w") as fp:
-            logger.debug("Writing data to category_index.json")
-            json.dump(category_index, fp)
-
-        self._write_gzip(
-            pickle_data, os.path.join(base_path, "db.pickle"),
-        )
-
-    def get_top_25(self) -> dict:
-        """ Get a dict of the top 25 weaknesses
-
-        Returns:
-            dict
-        """
-
-        data = self._load_database()
-        return {k: v for k, v in data.items() if str(k) in top_25}
-
-    def get(
-        self, cwe_id: Union[int, str], default: Optional[Any] = None
-    ) -> Union[Weakness, Any]:
-        """ Get a common weakness object
-
-        Args:
-            cwe_id: The CWE ID
-            default: A default value to return if the ID is not found
-        Returns:
-            Weakness
-        """
-
-        db: dict = self._load_database()
-
-        if not db.get(str(cwe_id)):
-            return default
-
-        return Weakness(**self._prepare_weakness(db[str(cwe_id)]))
-
-    def _prepare_weakness(self, weakness: dict) -> dict:
-        """ Prepares the raw weakness object for creating a new Weakness instance """
-        return {
-            k.replace(" ", "_").replace("-", "_").lower(): v
-            for k, v in weakness.items()
-            if k
+    def get(self, cwe_id: Union[int, str], category: str = None) -> Weakness:
+        """ Returns a CWE Weakness object """
+        cwe_category = {
+            CWECategory.SOFTWARE_DEVELOPMENT: self.software_development_db,
+            CWECategory.HARDWARE_DESIGN: self.hardware_design_db,
+            CWECategory.RESEARCH_CONCEPTS: self.research_concepts_db
         }
 
-    def get_category(self, category: str) -> List[Weakness]:
-        """ Returns a dictionary of weaknesses from a category
+        if not category:
+            software_development_obj = self.software_development_db[self.software_development_db['CWE-ID'].values
+                                                                    == int(cwe_id)]
+            hardware_design_obj = self.hardware_design_db[self.hardware_design_db['CWE-ID'].values
+                                                          == int(cwe_id)]
+            research_concepts_obj = self.research_concepts_db[self.research_concepts_db['CWE-ID'].values
+                                                              == int(cwe_id)]
+            if not software_development_obj.empty:
+                cwe_obj = software_development_obj
+            elif not hardware_design_obj.empty:
+                cwe_obj = hardware_design_obj
+            elif not research_concepts_obj.empty:
+                cwe_obj = research_concepts_obj
+            else:
+                raise Exception(f"Invalid cwe id {cwe_id}")
+        else:
+            cwe_obj = cwe_category[category][cwe_category[category]['CWE-ID'].values == int(cwe_id)]
+            if cwe_obj.empty:
+                raise Exception(f"Invalid cwe id {cwe_id} - for {category}")
 
-        Args:
-            category: The category
-        Returns
-            dict: A dict of weaknesses from the category
-        """
+        return Weakness(*cwe_obj.values[0])
 
-        category_map: dict = self._load_category_index()
+    def get_top_25_cwe(self) -> List[Weakness]:
+        """ Returns a list of all CWE Top 25 (2022) Weakness objects """
+        weakness_list = []
+        for cwe_id in self.cwe_top_25_2022_db['CWE-ID'].values:
+            cwe_obj = self.cwe_top_25_2022_db[self.cwe_top_25_2022_db['CWE-ID'].values == int(cwe_id)]
+            weakness_list.append(Weakness(*cwe_obj.values[0]))
+        return weakness_list
 
-        if category not in category_map:
-            raise KeyError(f"Unknown category {category}")
+    def get_owasp_top_ten_2021(self) -> List[Weakness]:
+        """ Returns a list of all OWASP Top Ten (2021) Weakness objects """
+        weakness_list = []
+        for cwe_id in self.owasp_top_ten_2021_db['CWE-ID'].values:
+            cwe_obj = self.owasp_top_ten_2021_db[self.owasp_top_ten_2021_db['CWE-ID'].values == int(cwe_id)]
+            weakness_list.append(Weakness(*cwe_obj.values[0]))
+        return weakness_list
 
-        db: dict = self._load_database()
+    def is_cwe_top_25(self, cwe_id: Union[int, str]) -> bool:
+        """ Returns True if Weakness object in a Top 25 CWE else False """
+        return int(cwe_id) in self.cwe_top_25_2022_db['CWE-ID'].values
 
-        resp: list = []
-
-        for i in category_map[category]:
-            resp.append(Weakness(**self._prepare_weakness(db[i])))
-
-        return resp
-
-    def get_all(self) -> List[Weakness]:
-        """ Returns a list of all cwe Weakness objects """
-
-        db: dict = self._load_database()
-
-        resp: List[Weakness] = []
-        for k, v in db.items():
-            resp.append(Weakness(**self._prepare_weakness(v)))
-
-        return resp
+    def is_owasp_top_ten_2021(self, cwe_id: Union[int, str]) -> bool:
+        """ Returns True if Weakness object in a Top OWASP Ten (2021) else False """
+        return int(cwe_id) in self.owasp_top_ten_2021_db['CWE-ID'].values
 
 
 if __name__ == "__main__":
-
-    db = Database()
-    cwe = db.get(15)
-    print(cwe)
+    obj1 = Database()
+    obj2 = Database()
+    print('Are they the same object?', obj1.owasp_top_ten_2021_db is obj2.owasp_top_ten_2021_db)
