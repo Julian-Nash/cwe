@@ -16,7 +16,7 @@ cwe_src_mapping: dict = {
     },
 }
 
-external_mappings: dict = {
+external_mapping: dict = {
     "CWE_top_25_2022": {
         "csv_uri": "https://cwe.mitre.org/data/csv/1387.csv.zip",
         "csv_file": "database/1387.csv",

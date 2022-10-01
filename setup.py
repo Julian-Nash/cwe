@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="cwe2",
-    version="2.0",
+    version="2.0.0",
     packages=setuptools.find_packages(),
     author="Julian Nash",
     include_package_data=True,
-    install_requires=["pandas"],
+    install_requires=[""],
     author_email="julianjamesnash@gmail.com",
     description="Common weakness enumeration wrapper for Python, fork from https://github.com/Julian-Nash/cwe",
     long_description=long_description,

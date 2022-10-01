@@ -11,12 +11,12 @@ class TestDatabase(TestCase):
 
     def test_get_cwe_by_category(self):
         cwe = self.db.get(441, CWECategory.HARDWARE_DESIGN)
-        self.assertEqual(cwe.cwe_id, 441)
+        self.assertEqual(cwe.cwe_id, "441")
         self.assertEqual(cwe.name, "Unintended Proxy or Intermediary ('Confused Deputy')")
 
     def test_cwe_get(self):
         cwe = self.db.get(15)
-        self.assertEqual(cwe.cwe_id, 15)
+        self.assertEqual(cwe.cwe_id, "15")
         self.assertEqual(cwe.name, "External Control of System or Configuration Setting")
         self.assertEqual(cwe.weakness_abstraction, "Base")
         self.assertEqual(cwe.status, "Incomplete")
@@ -58,6 +58,10 @@ class TestDatabase(TestCase):
                                                 "Manipulation::TAXONOMY NAME:Software Fault Patterns:ENTRY "
                                                 "ID:SFP25:ENTRY NAME:Tainted input to variable::")
 
+    def test_cwe_error(self):
+        with self.assertRaises(Exception):
+            self.db.get(1000000)
+
     def test_is_top_25_cwe(self):
         self.assertTrue(self.db.is_cwe_top_25(20))
         self.assertTrue(self.db.is_cwe_top_25("20"))
@@ -77,4 +81,3 @@ class TestDatabase(TestCase):
     def test_get_owasp_top_ten_2021(self):
         self.assertEqual(len(self.db.get_owasp_top_ten_2021()), 182)
         self.assertTrue(isinstance(self.db.get_owasp_top_ten_2021()[0], Weakness))
-
