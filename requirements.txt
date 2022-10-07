@@ -1,1 +1,1 @@
-setuptools~=60.2.0
+black==22.8.0

@@ -1,2 +1,2 @@
 include *.txt
-global-include *.csv *.json
+global-include *.csv

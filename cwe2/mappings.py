@@ -22,10 +22,9 @@ external_mapping: dict = {
         "csv_file": "database/1387.csv",
         "csv_hash": "",
     },
-
     "OWASP_top_ten_2021": {
         "csv_uri": "https://cwe.mitre.org/data/csv/1344.csv.zip",
         "csv_file": "database/1344.csv",
         "csv_hash": "",
-    }
+    },
 }

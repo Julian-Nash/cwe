@@ -1,4 +1,4 @@
-from cwe.database import Database
+from cwe2.database import Database
 
 
 def main():

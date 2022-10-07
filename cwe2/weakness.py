@@ -1,18 +1,19 @@
 from dataclasses import dataclass
-from typing import Optional, Any, Union
+from typing import Any, Optional, Union
 
 
 @dataclass
 class Weakness(object):
-    """ Common weakness object """
+    """Common weakness object"""
+
     cwe_id: str
     name: str
-    weakness_abstraction: Optional[str] = None,
-    status: Optional[str] = None,
-    description: Optional[str] = None,
-    extended_description: Optional[str] = None,
-    related_weaknesses: Optional[str] = None,
-    weakness_ordinalities: Optional[str] = None,
+    weakness_abstraction: Optional[str] = (None,)
+    status: Optional[str] = (None,)
+    description: Optional[str] = (None,)
+    extended_description: Optional[str] = (None,)
+    related_weaknesses: Optional[str] = (None,)
+    weakness_ordinalities: Optional[str] = (None,)
     applicable_platforms: Optional[str] = None
     background_details: Optional[str] = None
     alternate_terms: Optional[str] = None
@@ -30,7 +31,7 @@ class Weakness(object):
     notes: Optional[str] = None
 
     def get(self, prop: str, default: Optional[Any] = None) -> Union[str, Any]:
-        """ Get a property of the weakness
+        """Get a property of the weakness
 
         Args:
             prop: The weakness property
@@ -39,4 +40,3 @@ class Weakness(object):
             str: The property
         """
         return getattr(self, prop, default)
-
