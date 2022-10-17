@@ -126,4 +126,3 @@ dmypy.json
 .DS_Store
 .idea
 .vscode
-*.csv
