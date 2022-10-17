@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from cwe2.categories import CWECategory
-from cwe2.database import Database
-from cwe2.weakness import Weakness
+from src.cwe2.categories import CWECategory
+from src.cwe2 import Database
+from src.cwe2.weakness import Weakness
 
 
 class TestDatabase(TestCase):

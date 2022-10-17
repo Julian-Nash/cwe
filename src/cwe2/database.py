@@ -2,9 +2,9 @@ import csv
 import os
 from typing import List, Union
 
-from cwe2.categories import CWECategory
-from cwe2.mappings import cwe_src_mapping, external_mapping
-from cwe2.weakness import Weakness
+from src.cwe2.categories import CWECategory
+from src.cwe2.mappings import cwe_src_mapping, external_mapping
+from src.cwe2.weakness import Weakness
 
 
 class Database:
