@@ -2,49 +2,28 @@ import csv
 import os
 from typing import List, Union
 
-from src.cwe2.categories import CWECategory
-from src.cwe2.mappings import cwe_src_mapping, external_mapping
-from src.cwe2.weakness import Weakness
+from cwe2.categories import CWECategory
+from cwe2.mappings import cwe_src_mapping, external_mapping
+from cwe2.weakness import Weakness
 
 
 class Database:
-    _instance = None
-
     base_path = os.path.abspath(os.path.dirname(__file__))
     software_development_db = open(
-        os.path.join(base_path, cwe_src_mapping["software_development"]["csv_file"]),
-        mode="r",
-        newline="",
+        os.path.join(base_path, cwe_src_mapping["software_development"]["csv_file"])
     )
-
     hardware_design_db = open(
-        os.path.join(base_path, cwe_src_mapping["hardware_design"]["csv_file"]),
-        mode="r",
-        newline="",
+        os.path.join(base_path, cwe_src_mapping["hardware_design"]["csv_file"])
     )
-
     research_concepts_db = open(
-        os.path.join(base_path, cwe_src_mapping["research_concepts"]["csv_file"]),
-        mode="r",
-        newline="",
+        os.path.join(base_path, cwe_src_mapping["research_concepts"]["csv_file"])
     )
-
     cwe_top_25_2022_db = open(
-        os.path.join(base_path, external_mapping["CWE_top_25_2022"]["csv_file"]),
-        mode="r",
-        newline="",
+        os.path.join(base_path, external_mapping["CWE_top_25_2022"]["csv_file"])
     )
-
     owasp_top_ten_2021_db = open(
-        os.path.join(base_path, external_mapping["OWASP_top_ten_2021"]["csv_file"]),
-        mode="r",
-        newline="",
+        os.path.join(base_path, external_mapping["OWASP_top_ten_2021"]["csv_file"])
     )
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(Database, cls).__new__(cls)
-        return cls._instance
 
     def get(self, cwe_id: Union[int, str], category: str = None) -> Weakness:
         """Returns a CWE Weakness object"""
@@ -56,9 +35,7 @@ class Database:
         }
 
         for cwe_category in (
-            {cwe_category_mapper[category]}
-            if category
-            else cwe_category_mapper.values()
+            {cwe_category_mapper[category]} if category else cwe_category_mapper.values()
         ):
             cwe_category.seek(0)
             reader = csv.DictReader(cwe_category)
@@ -68,7 +45,7 @@ class Database:
                     break
 
         if not cwe_obj:
-            raise Exception(f"Invalid CWE ID {cwe_id} - { category or ''}")
+            raise Exception(f"Invalid CWE ID {cwe_id} - {category or ''}")
 
         return Weakness(*cwe_obj)
 
@@ -109,10 +86,4 @@ class Database:
         return False
 
 
-if __name__ == "__main__":
-    obj1 = Database()
-    obj2 = Database()
-    print(
-        "Are they the same object?",
-        obj1.owasp_top_ten_2021_db is obj2.owasp_top_ten_2021_db,
-    )
+database = Database()

@@ -37,7 +37,10 @@ extensions = [
 
 intersphinx_mapping = {
     "aboutcode": ("https://aboutcode.readthedocs.io/en/latest/", None),
-    "scancode-workbench": ("https://scancode-workbench.readthedocs.io/en/develop/", None),
+    "scancode-workbench": (
+        "https://scancode-workbench.readthedocs.io/en/develop/",
+        None,
+    ),
 }
 
 
