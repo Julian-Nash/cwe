@@ -94,7 +94,7 @@ class Database(object):
                         cwe_id: str = row["CWE-ID"]
                         # Update the category index
                         if cwe_id not in category_index[category]:
-                            category_index[category].append()
+                            category_index[category].append(cwe_id)
                         #  Insert the cwe into it's respective category
                         db_dict[cwe_id] = row
 
